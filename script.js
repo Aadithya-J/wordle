@@ -56,8 +56,9 @@ document.addEventListener('click', function(event) {
 
 
 var currentWord = document.querySelector('.word1');
+var wordIndex = 1;
 var index = 0;
-function handleKeyDown(event) {
+async function handleKeyDown(event) {
     if(isAlpha(event.key)){
         if(index <= 4){
             const currentLetter = currentWord.querySelector(`.letter-${index}`);
@@ -72,9 +73,77 @@ function handleKeyDown(event) {
             currentLetter.textContent = '';
         }
     }
+    if(event.key == 'Enter'){
+        if(await ValidateWord()){
+            const userWord = getUserWord();
+            for(let i =0;i < 5;i++){
+                const currentLetter = currentWord.querySelector(`.letter-${i}`);
+                if(currentLetter.textContent == wordle.word[i]){
+                    currentLetter.style.backgroundColor = 'green';
+                }
+                else if(wordle.word.includes(currentLetter.textContent)){
+                    currentLetter.style.backgroundColor = 'yellow';
+                }
+                else{
+                    currentLetter.style.backgroundColor = 'gray';
+                }
+            }
+            console.log(wordle.word);
+            if(wordle.word == userWord){
+                alert('You Win');
+                console.log('You Win')
+            }
+            else{
+                if(wordIndex == 5){
+                    alert('You Lose');
+                    console.log('You Lose')
+                }
+                else{
+                    wordIndex+=1;
+                    currentWord = document.querySelector(`.word${wordIndex}`);
+                    index = 0;
+                    console.log(currentWord);
+                }
+            }
+        }
+        else{
+            for(let i = 0;i < 5;i++){
+                const currentLetter = currentWord.querySelector(`.letter-${i}`);
+                currentLetter.style.backgroundColor = 'red';
+            }
+            setTimeout(function() {
+                for(let i = 0;i < 5;i++){
+                    const currentLetter = currentWord.querySelector(`.letter-${i}`);
+                    currentLetter.style.backgroundColor = 'white';
+                }
+            }, 200);
+        }
+    }
+}
+async function ValidateWord(){
+    const userWord = getUserWord();
+    const posturl = "https://words.dev-apis.com/validate-word"
+    const data = {
+        word: userWord
+    }
+    const sdata = JSON.stringify(data);
+    const response = await fetch(posturl, {
+        method: 'POST',
+        body: sdata
+    });
+    const bool = JSON.parse(await response.text()).validWord;
+    console.log(bool);
+    return bool;
 }
 
-
+function getUserWord(){
+    var word = '';
+    for(let i =0;i < 5;i++){
+        const currentLetter = currentWord.querySelector(`.letter-${i}`);
+        word += currentLetter.textContent;
+    }
+    return word;
+}
 function isAlpha(char){
     return /^[A-Z]$/i.test(char);
 }
