@@ -109,14 +109,11 @@ async function handleKeyDown(event) {
         else{
             for(let i = 0;i < 5;i++){
                 const currentLetter = currentWord.querySelector(`.letter-${i}`);
-                currentLetter.style.backgroundColor = 'red';
+                currentLetter.style.animation = "flash 1s 1"
+                setTimeout(function(){
+                    currentLetter.style.animation = "";
+                }, 1000)
             }
-            setTimeout(function() {
-                for(let i = 0;i < 5;i++){
-                    const currentLetter = currentWord.querySelector(`.letter-${i}`);
-                    currentLetter.style.backgroundColor = 'white';
-                }
-            }, 200);
         }
     }
 }
