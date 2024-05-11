@@ -74,6 +74,9 @@ async function handleKeyDown(event) {
         }
     }
     if(event.key == 'Enter'){
+        const navbar = document.querySelector('.navbar');
+        const infobar = document.querySelector('.info-bar');
+        infobar.classList.remove('hidden');
         if(await ValidateWord()){
             const userWord = getUserWord();
             for(let i =0;i < 5;i++){
@@ -90,8 +93,11 @@ async function handleKeyDown(event) {
             }
             console.log(wordle.word);
             if(wordle.word == userWord){
-                alert('You Win');
                 console.log('You Win')
+                const winText = document.createElement('h2');
+                winText.style.animation = "rainbow 4s infinite linear"
+                winText.textContent = 'You Win';
+                navbar.appendChild(winText);
             }
             else{
                 if(wordIndex == 5){
@@ -130,6 +136,8 @@ async function ValidateWord(){
     });
     const bool = JSON.parse(await response.text()).validWord;
     console.log(bool);
+    const infobar = document.querySelector('.info-bar');
+    infobar.classList.add('hidden');
     return bool;
 }
 
