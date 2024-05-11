@@ -81,14 +81,12 @@ async function handleKeyDown(event) {
             const userWord = getUserWord();
             for(let i =0;i < 5;i++){
                 const currentLetter = currentWord.querySelector(`.letter-${i}`);
-                if(currentLetter.textContent == wordle.word[i]){
-                    currentLetter.style.backgroundColor = 'green';
-                }
-                else if(wordle.word.includes(currentLetter.textContent)){
-                    currentLetter.style.backgroundColor = 'yellow';
-                }
-                else{
-                    currentLetter.style.backgroundColor = 'gray';
+                if (currentLetter.textContent == wordle.word[i]) {
+                    currentLetter.style.borderColor = 'green';
+                } else if (wordle.word.includes(currentLetter.textContent)) {
+                    currentLetter.style.borderColor = 'yellow';
+                } else {
+                    currentLetter.style.borderColor = 'gray';
                 }
             }
             console.log(wordle.word);
@@ -101,8 +99,9 @@ async function handleKeyDown(event) {
             }
             else{
                 if(wordIndex == 5){
-                    alert('You Lose');
-                    console.log('You Lose')
+                    const loseText = document.createElement('h2');
+                    loseText.innerHTML = '<p>You Lose.<\p> <p>The word was: ' + wordle.word + '<\p>';
+                    navbar.appendChild(loseText);
                 }
                 else{
                     wordIndex+=1;
